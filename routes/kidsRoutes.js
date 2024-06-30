@@ -11,7 +11,7 @@ router.route('/connect').post(kidsController.connectKidNik);
 router
   .route('/') //
   .get(kidsController.getAllKids)
-  .post(authController.restrictTo('admin'), kidsController.createNewKids);
+  .post(kidsController.createNewKids);
 
 router
   .route('/:id') //
