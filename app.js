@@ -31,6 +31,7 @@ const corsOptions = {
   origin: ['http://localhost:5173', 'https://posanak.netlify.app'],
   optionsSuccessStatus: 200, // Beberapa browser legasi (IE11, SmartTVs) tidak mendukung 204
   allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true, //access-control-allow-credentials:true
 };
 
 app.use(cors(corsOptions));
