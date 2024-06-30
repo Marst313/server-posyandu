@@ -30,19 +30,22 @@ app.use(
 const corsOptions = {
   origin: ['http://localhost:5173', 'https://posanak.netlify.app/'],
   optionsSuccessStatus: 200, // atau sesuaikan dengan status yang diinginkan
-  allowedHeaders: ['Content-Type', 'Authorization'], // sesuaikan dengan header yang diperlukan
+  allowedHeaders: ['Content-Type', 'Authorization'],
 };
 
 app.use(cors(corsOptions));
 
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'https://posanak.netlify.app');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.setHeader('Access-Control-Allow-Origin', 'https://posanak.netlify.app');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', true);
+
   if (req.method === 'OPTIONS') {
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
-    return res.status(200).json({});
+    res.status(200).end();
+  } else {
+    next();
   }
-  next();
 });
 
 //! Development looging
