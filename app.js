@@ -27,11 +27,13 @@ app.use(
 );
 
 //! Enable CORS
-// const corsOptions = {
-//   origin: ['http://localhost:5173', 'https://posanak.netlify.app/'],
-// };
+const corsOptions = {
+  origin: ['http://localhost:5173', 'https://posanak.netlify.app/'],
+  optionsSuccessStatus: 200, // atau sesuaikan dengan status yang diinginkan
+  allowedHeaders: ['Content-Type', 'Authorization'], // sesuaikan dengan header yang diperlukan
+};
 
-// app.use(cors(corsOptions));
+app.use(cors(corsOptions));
 
 //! Development looging
 if (process.env.NODE_ENV === 'development') {
