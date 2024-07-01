@@ -26,27 +26,16 @@ app.use(
   })
 );
 
-//! Enable CORS
+// Enable CORS
 const corsOptions = {
   origin: ['http://localhost:5173', 'https://posanak.netlify.app'],
   optionsSuccessStatus: 200, // Beberapa browser legasi (IE11, SmartTVs) tidak mendukung 204
   allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true, // Allow credentials to be sent
 };
 
 app.use(cors(corsOptions));
 
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173', 'https://posanak.netlify.app');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  res.setHeader('Access-Control-Allow-Credentials', true);
-
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-  } else {
-    next();
-  }
-});
 // Development logging
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
