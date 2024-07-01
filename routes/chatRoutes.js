@@ -4,14 +4,19 @@ const authController = require('../controller/authController');
 
 const router = express.Router();
 
+router.use(authController.protect);
+
 router
   .route('/') //
   .get(chatController.getAllChat)
-  .post(authController.protect, chatController.generateChatNew);
+  .post(chatController.generateChatNew);
+
+router.route('/user').get(chatController.getUsersChat);
 
 router
   .route('/:id') //
-  .post(authController.protect, chatController.generateNextChat)
-  .delete(authController.protect, chatController.deleteChat);
+  .get(chatController.getSingleChat)
+  .post(chatController.generateNextChat)
+  .delete(chatController.deleteChat);
 
 module.exports = router;

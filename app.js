@@ -19,7 +19,7 @@ const AppError = require('./utils/appError');
 
 const app = express();
 
-//! Set security HTTP headers
+// Set security HTTP headers
 app.use(
   helmet({
     crossOriginEmbedderPolicy: false,
@@ -31,13 +31,12 @@ const corsOptions = {
   origin: ['http://localhost:5173', 'https://posanak.netlify.app'],
   optionsSuccessStatus: 200, // Beberapa browser legasi (IE11, SmartTVs) tidak mendukung 204
   allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true, //access-control-allow-credentials:true
 };
 
 app.use(cors(corsOptions));
 
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'https://posanak.netlify.app');
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173', 'https://posanak.netlify.app');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
   res.setHeader('Access-Control-Allow-Credentials', true);
@@ -48,8 +47,7 @@ app.use((req, res, next) => {
     next();
   }
 });
-
-//! Development looging
+// Development logging
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
@@ -59,21 +57,21 @@ app.use(
   rateLimit({
     max: 200,
     windowMs: 60 * 60 * 1000,
-    message: 'Too many request from this IP, wait again an a hour !',
+    message: 'Too many requests from this IP, please try again in an hour!',
   })
 );
 
-//! Body parser, reading data from body into req.body
+// Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));
 app.use(cookieParser());
 
-//! Data sanitization against NoSQL query injection
+// Data sanitization against NoSQL query injection
 app.use(mongoSanitize());
 
-//! Data sanitization against xss
+// Data sanitization against xss
 // app.use(xss());
 
-//! Prevent paramater pollution
+// Prevent parameter pollution
 /* app.use(
   hpp({
     whitelist: [],
@@ -87,7 +85,7 @@ app.use('/api/v1/activity', activityRouter);
 app.use('/api/v1/chat', chatRouter);
 
 app.all('*', (req, res, next) => {
-  next(new AppError(`Cant find ${req.originalUrl} on this server`));
+  next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
 });
 
 app.use(globalErrorHandle);

@@ -39,23 +39,21 @@ exports.generateChatNew = catchAsync(async (req, res, next) => {
   // ! 2.) Send user message to CHAT BOT and get Response
   const response = await run(req.body.message, history);
 
-  // ! 3.) Create New History
-  history.push(
-    {
-      role: 'user',
-      parts: [{ text: req.body.message }],
-    },
-    {
-      role: 'model',
-      parts: [{ text: response }],
-    }
-  );
+  let transformedHistory = [];
+  for (let i = 0; i < history.length; i += 2) {
+    transformedHistory.push({
+      question: history[i]?.parts[0]?.text || '',
+      answer: history[i + 1]?.parts[0]?.text || '',
+    });
+  }
+
+  const multiChatString = JSON.stringify(transformedHistory);
 
   //! 4.) Convert history array to JSON string
   const historyString = JSON.stringify(history);
 
   // ! 5.) Store history and chat in DB
-  await Chat.create({ question: req.body.message, user: req.user.id, history: historyString, isNewChat: false });
+  await Chat.create({ question: req.body.message, user: req.user.id, history: historyString, multiChat: multiChatString, isNewChat: false });
 
   res.status(200).json({
     message: 'success',
@@ -76,23 +74,21 @@ exports.generateNextChat = catchAsync(async (req, res, next) => {
   // ! 4.) Create response from new message + last History
   const response = await run(req.body.message, history);
 
-  // ! 5.) Create Next History
-  history.push(
-    {
-      role: 'user',
-      parts: [{ text: req.body.message }],
-    },
-    {
-      role: 'model',
-      parts: [{ text: response }],
-    }
-  );
+  let transformedHistory = [];
+  for (let i = 0; i < history.length; i += 2) {
+    transformedHistory.push({
+      question: history[i]?.parts[0]?.text || '',
+      answer: history[i + 1]?.parts[0]?.text || '',
+    });
+  }
 
-  // ! 6.) Parse Object To String
+  const multiChatString = JSON.stringify(transformedHistory);
+
+  // ! 5.) Parse Object To String
   const historyString = JSON.stringify(history);
 
-  // ! 7.) Update History
-  await Chat.findByIdAndUpdate(req.params.id, { history: historyString }).lean();
+  // ! 6.) Update History
+  await Chat.findByIdAndUpdate(req.params.id, { history: historyString, multiChat: multiChatString }).lean();
 
   res.status(200).json({
     message: 'success',
@@ -108,6 +104,29 @@ exports.getAllChat = catchAsync(async (req, res, next) => {
   res.status(200).json({
     message: 'success',
     result: data.length,
+    data,
+  });
+});
+
+exports.getUsersChat = catchAsync(async (req, res, next) => {
+  const data = await Chat.find({ user: req.user.id }).lean();
+
+  if (!data) return next(new AppError('There is no chat with that id', 404));
+
+  res.status(200).json({
+    message: 'success',
+    result: data.length,
+    data,
+  });
+});
+
+exports.getSingleChat = catchAsync(async (req, res, next) => {
+  const data = await Chat.findById(req.params.id);
+
+  if (!data) return next(new AppError('There is no chat with that id', 404));
+
+  res.status(200).json({
+    message: 'success',
     data,
   });
 });

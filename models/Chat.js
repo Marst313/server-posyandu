@@ -5,6 +5,9 @@ const PosyanduChatSchema = new mongoose.Schema({
     type: String,
   },
   history: {
+    type: [String],
+  },
+  multiChat: {
     type: String,
   },
   user: {
