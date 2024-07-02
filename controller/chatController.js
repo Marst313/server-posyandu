@@ -53,10 +53,13 @@ exports.generateChatNew = catchAsync(async (req, res, next) => {
   const historyString = JSON.stringify(history);
 
   // ! 5.) Store history and chat in DB
-  await Chat.create({ question: req.body.message, user: req.user.id, history: historyString, multiChat: multiChatString, isNewChat: false });
+  const newChat = await Chat.create({ question: req.body.message, user: req.user.id, history: historyString, multiChat: multiChatString, isNewChat: false });
+
+  console.log(newChat);
 
   res.status(200).json({
     message: 'success',
+    id: newChat._id,
     response,
   });
 });
