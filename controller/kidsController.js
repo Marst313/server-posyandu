@@ -94,3 +94,23 @@ exports.connectKidNik = catchAsync(async (req, res, next) => {
     data: updatedUser,
   });
 });
+
+exports.getAllConnectedKids = catchAsync(async (req, res, next) => {
+  const nikArray = req.body.nikKids;
+  const allData = [];
+
+  if (!nikArray.length === 0) return next(new AppError('Tolong berikan NIK yang valid!', 404));
+
+  await Promise.all(
+    nikArray.map(async (nik) => {
+      const data = await Kids.find({ nik });
+
+      allData.push(...data);
+    })
+  );
+
+  res.status(200).json({
+    message: 'success',
+    data: allData,
+  });
+});
