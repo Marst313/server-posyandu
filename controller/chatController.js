@@ -112,7 +112,7 @@ exports.getAllChat = catchAsync(async (req, res, next) => {
 });
 
 exports.getUsersChat = catchAsync(async (req, res, next) => {
-  const data = await Chat.find({ user: req.user.id }).lean();
+  const data = await Chat.find({ user: req.body.id }).lean();
 
   if (!data) return next(new AppError('There is no chat with that id', 404));
 

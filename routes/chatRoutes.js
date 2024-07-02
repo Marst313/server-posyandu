@@ -11,7 +11,7 @@ router
   .get(chatController.getAllChat)
   .post(chatController.generateChatNew);
 
-router.route('/user').get(chatController.getUsersChat);
+router.route('/user').post(chatController.getUsersChat);
 
 router
   .route('/:id') //
