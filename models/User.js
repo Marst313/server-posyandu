@@ -19,7 +19,7 @@ const PosyanduUserSchema = new mongoose.Schema({
   },
   photo: {
     type: String,
-    default: 'default.jpg',
+    default: 'https://firebasestorage.googleapis.com/v0/b/posyandu2-893b0.appspot.com/o/contohProfile.jpeg?alt=media',
   },
   role: {
     type: String,
