@@ -24,3 +24,14 @@ exports.getAllUser = catchAsync(async (req, res, next) => {
     data,
   });
 });
+
+exports.updateUser = catchAsync(async (req, res, next) => {
+  const { email, name, photo } = req.body;
+
+  const user = await User.findByIdAndUpdate(req.user.id, { name, email, photo }).select('-password');
+
+  res.status(200).json({
+    status: 'success',
+    data: user,
+  });
+});
