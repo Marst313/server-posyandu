@@ -28,6 +28,8 @@ exports.getAllUser = catchAsync(async (req, res, next) => {
 exports.updateUser = catchAsync(async (req, res, next) => {
   const { email, name, photo } = req.body;
 
+  if (!email || !name) return next(new AppError('Data harus diisi semua!', 404));
+
   const user = await User.findByIdAndUpdate(req.user.id, { name, email, photo }).select('-password');
 
   res.status(200).json({

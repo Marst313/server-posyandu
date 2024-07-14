@@ -60,6 +60,8 @@ exports.deleteKid = catchAsync(async (req, res, next) => {
     return next(new AppError('Tidak ada anak dengan id tersebut!', 404));
   }
 
+  await User.updateMany({ nikKids: document.nik }, { $pull: { nikKids: document.nik } });
+
   res.status(204).json({
     message: 'success',
     data: null,
