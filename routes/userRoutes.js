@@ -11,6 +11,8 @@ router.route('/logout').post(authController.logout);
 router.use(authController.protect);
 
 router.route('/updateMe').post(userController.updateUser);
+router.route('/updatePassword').post(authController.changePassword);
+
 router.route('/').get(authController.restrictTo('admin'), userController.getAllUser);
 router.route('/:id').get(userController.getSingleUser);
 

@@ -35,6 +35,7 @@ const PosyanduUserSchema = new mongoose.Schema({
       message: 'NIK anak harus memiliki 16 digit!',
     },
     unique: [true, 'NIK sudah digunakan!'],
+    sparse: true,
   },
   noWa: {
     type: Number,

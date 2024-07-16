@@ -95,6 +95,30 @@ exports.isLoggedIn = async (req, res, next) => {
   }
 };
 
+exports.changePassword = async (req, res, next) => {
+  const { currentPassword, newPassword } = req.body;
+
+  // 1. Check if user provided current password and new password
+  if (!currentPassword || !newPassword) {
+    return next(new AppError('Masukkan password lama dan password baru', 400));
+  }
+
+  // 2. Check if the current password is correct
+  const user = await User.findById(req.user.id).select('+password');
+  if (!(await user.checkPassword(currentPassword, user.password))) {
+    return next(new AppError('Password lama tidak sesuai!', 401));
+  }
+
+  if (newPassword.length < 8) return next(new AppError('Password harus lebih dari 8 karakter', 400));
+
+  user.password = newPassword;
+  user.passwordChangedAt = Date.now();
+  await user.save();
+
+  // 4. Log user in, send JWT
+  createSendToken(user, 200, res);
+};
+
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
