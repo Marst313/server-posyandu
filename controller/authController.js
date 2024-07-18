@@ -6,13 +6,13 @@ const AppError = require('../utils/appError');
 const { createSendToken } = require('../utils/index');
 const User = require('../models/User');
 
-exports.register = catchAsync(async (req, res, next) => {
+exports.register = async (req, res, next) => {
   const newUser = await User.create(req.body);
 
   // let url = `${req.protocol}://${process.env.NODE_ENV === 'development' ? 'localhost:3000' : req.get('host')}/me`;
 
   createSendToken(newUser, 201, res);
-});
+};
 
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
